@@ -1,0 +1,6 @@
+taskiq
+redis
+taskiq-redis
+loguru
+aiogram
+pydantic-settings
