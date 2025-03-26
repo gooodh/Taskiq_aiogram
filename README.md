@@ -1,7 +1,7 @@
 # Taskiq_aiogram
 
 start worker
-```taskiq worker broker:broker```
+```taskiq worker tkq:broker --reload```
 
 staret bot
-```python bot/main.py ```
+```python bot/bot.py ```

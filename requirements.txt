@@ -1,6 +1,7 @@
-taskiq
+taskiq[reload]
 redis
 taskiq-redis
 loguru
 aiogram
 pydantic-settings
+taskiq-aiogram
