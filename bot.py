@@ -1,13 +1,12 @@
 import asyncio
-import logging
-import sys
+
 from loguru import logger
 
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, types
 from aiogram.filters import Command
 
-from tkq import broker, my_task
-from config import dp, bot
+from app.tkq import broker, schedule_messages
+from app.config import dp, bot
 
 
 # Taskiq calls this function when starting the worker.
@@ -29,22 +28,36 @@ async def shutdown_taskiq(bot: Bot, *_args, **_kwargs):
         await broker.shutdown()
 
 
-## Simple command to handle
+# # Simple command to handle
 @dp.message(Command("task"))
 async def message(message: types.Message):
-    logger.info("Sending task")
-    await my_task.kiq(message.chat.id)
+    user_id = message.from_user.id
+    counter_mess = 2
+    timeout = 2
+
+    try:
+        data = {
+            "user_id": user_id,
+            "counter_mess": counter_mess,
+            "timeout": timeout,
+        }
+
+        # Вызов задачи с передачей данных
+        await schedule_messages.kiq(**data)
+        logger.info("taskq work schedule")
+
+    except Exception as e:
+        logger.error(e)
+
 
 
 ## Main function that starts the bot.
 async def main():
-    await dp.start_polling(bot)
     try:
         await bot.delete_webhook(drop_pending_updates=True)
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
-    finally:
-        await bot.session.close()
-
+    except Exception as e:
+        logger.error(e)
 
 
 if __name__ == "__main__":

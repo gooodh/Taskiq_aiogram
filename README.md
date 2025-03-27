@@ -1,7 +1,25 @@
 # Taskiq_aiogram
 
-start worker
-```taskiq worker tkq:broker --reload```
+## start worker
+```shell
+cd app/
+taskiq worker tkq:broker --reload
+```
 
-staret bot
-```python bot/bot.py ```
+## start bot
+```shell
+python bot.py 
+```
+
+## start scheduler
+
+```shell
+cd app/
+taskiq scheduler tkq:scheduler
+
+```
+
+## Or docker-compose
+```shell
+docker compose up -d --build
+```

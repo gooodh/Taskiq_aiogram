@@ -1,0 +1,36 @@
+services:
+  bot:
+    restart: always
+    build: .
+    container_name: "taskiq"
+    command: bash entrypoint.sh
+    depends_on:
+      - worker
+
+  scheduler:
+    restart: always
+    build: .
+    container_name: "scheduler"
+    command: bash scheduler.sh
+    depends_on:
+      - redis_task
+
+  worker:
+    restart: always
+    build: .
+    container_name: "worker"
+    command: bash worker.sh
+    depends_on:
+      - redis_task
+
+  redis_task:
+    restart: always
+    image: redis
+    container_name: "redis_task"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_task:/data
+
+volumes:
+  redis_task:
